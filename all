@@ -1,0 +1,467 @@
+#include <iostream>
+#include <vector>
+#include <list>
+#include <deque>
+#include <iterator>
+#include <algorithm>
+#include <numeric>
+#include <set>
+#include <map>
+
+using namespace std;
+
+// Задача 1: Заполнение и доступ к элементам. Обратные итераторы
+void task1() {
+    list<int> L;
+    int n, value;
+    
+    cout << "Введите количество элементов списка: ";
+    while (!(cin >> n) || n < 1) {
+        cout << "Ошибка ввода! Введите положительное целое число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    
+    cout << "Введите элементы списка: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        L.push_back(value);
+    }
+
+    cout << "Элементы списка в исходном порядке: ";
+    for (auto it = L.begin(); it != L.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Элементы списка в обратном порядке: ";
+    for (auto rit = L.rbegin(); rit != L.rend(); ++rit) {
+        cout << *rit << " ";
+    }
+    cout << endl;
+}
+
+// Задача 2: Вставка элементов
+void task2() {
+    vector<int> V;
+    deque<int> D;
+    int n, value;
+
+    cout << "Введите количество элементов (четное): ";
+    while (!(cin >> n) || n < 2 || n % 2 != 0) {
+        cout << "Ошибка ввода! Введите четное положительное число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V.push_back(value);
+    }
+
+    cout << "Введите элементы дека: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        D.push_back(value);
+    }
+
+    // Добавить первую половину элементов дека в конец вектора
+    V.insert(V.end(), D.begin(), D.begin() + n / 2);
+
+    // Добавить вторую половину вектора в начало дека (в обратном порядке)
+    D.insert(D.begin(), V.rbegin(), V.rbegin() + n / 2);
+
+    // Вывод результатов
+    cout << "Вектор после вставки: ";
+    for (int elem : V) {
+        cout << elem << " ";
+    }
+    cout << endl;
+
+    cout << "Дек после вставки: ";
+    for (int elem : D) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+// Задача 3: Удаление элементов
+void task3() {
+    vector<int> V;
+    int n, value;
+
+    cout << "Введите количество элементов (нечетное, >= 5): ";
+    while (!(cin >> n) || n < 5 || n % 2 == 0) {
+        cout << "Ошибка ввода! Введите нечетное число, большее или равное 5: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V.push_back(value);
+    }
+
+    // Удаление трех средних элементов
+    V.erase(V.begin() + n / 2 - 1, V.begin() + n / 2 + 2);
+
+    // Вывод результата
+    cout << "Вектор после удаления: ";
+    for (int elem : V) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+// Задача 4: Итераторы и алгоритмы
+void task4() {
+    double A, D;
+    int N;
+
+    cout << "Введите первый элемент A, разность D и количество элементов N: ";
+    while (!(cin >> A >> D >> N) || N < 1) {
+        cout << "Ошибка ввода! Введите числа A, D и положительное целое число N: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    vector<double> progression(N);
+    generate_n(progression.begin(), N, [=, current = A]() mutable {
+        double result = current;
+        current += D;
+        return result;
+    });
+
+    cout << "Арифметическая прогрессия: ";
+    for (double elem : progression) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+// Задача 5: Алгоритмы поиска
+void task5() {
+    vector<int> V;
+    int n, value;
+
+    cout << "Введите количество элементов (четное): ";
+    while (!(cin >> n) || n < 2 || n % 2 != 0) {
+        cout << "Ошибка ввода! Введите четное положительное число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V.push_back(value);
+    }
+
+    // Ищем элемент из второй половины в первой половине
+    auto it = find_first_of(V.begin(), V.begin() + n / 2, V.begin() + n / 2, V.end());
+    if (it != V.begin() + n / 2) {
+        V.insert(it, 0);
+    }
+
+    // Вывод результата
+    cout << "Вектор после добавления: ";
+    for (int elem : V) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+// Задача 6: Базовые модифицирующие алгоритмы
+void task6() {
+    list<int> L;
+    int K, value;
+
+    cout << "Введите значение K (0 < K < 5): ";
+    while (!(cin >> K) || K <= 0 || K >= 5) {
+        cout << "Ошибка ввода! Введите значение K от 1 до 4: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите не менее 10 элементов списка: ";
+    for (int i = 0; i < 10; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        L.push_back(value);
+    }
+
+    // Сдвиг первых и последних пяти элементов
+    list<int> temp;
+    rotate_copy(L.begin(), next(L.begin(), K), next(L.begin(), 5), back_inserter(temp));
+    L.insert(L.end(), temp.begin(), temp.end());
+
+    temp.clear();
+    rotate_copy(prev(L.end(), 5), prev(L.end(), 5 - K), L.end(), front_inserter(temp));
+    L.insert(L.begin(), temp.begin(), temp.end());
+
+    // Вывод результата
+    cout << "Список после сдвигов: ";
+    for (int elem : L) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+
+// Задача 7: Сортировка и слияние
+void task7() {
+    vector<int> V;
+    int n, value;
+
+    cout << "Введите количество элементов вектора (четное число): ";
+    while (!(cin >> n) || n < 2 || n % 2 != 0) {
+        cout << "Ошибка ввода! Введите четное число больше или равно 2: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V.push_back(value);
+    }
+
+    // Создаем временный вектор для хранения первых n/2 отсортированных элементов
+    vector<int> sortedHalf(n / 2);
+    // Копируем первые n/2 отсортированных элементов в sortedHalf
+    partial_sort_copy(V.begin(), V.end(), sortedHalf.begin(), sortedHalf.end());
+
+    // Добавляем элементы sortedHalf в конец вектора V
+    V.insert(V.end(), sortedHalf.begin(), sortedHalf.end());
+
+    // Вывод результата
+    cout << "Вектор после добавления первой половины отсортированных элементов: ";
+    for (const auto& elem : V) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+
+// Задача 8: Численные алгоритмы
+void task8() {
+    list<string> L;
+    deque<string> D;
+    int n;
+    string word;
+
+    cout << "Введите количество слов в списке (не менее 2): ";
+    while (!(cin >> n) || n < 2) {
+        cout << "Ошибка ввода! Введите число не меньше 2: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите слова: ";
+    for (int i = 0; i < n; ++i) {
+        cin >> word;
+        L.push_back(word);
+    }
+
+    // Построение элементов дека по парам соседних элементов
+    adjacent_difference(L.begin(), L.end(), inserter(D, D.end()), [](const string& left, const string& right) {
+        if (right.empty()) return left;
+        return string(1, left[0]) + right.back();
+    });
+
+    // Удаление первого элемента дека, так как он является копией первого элемента списка
+    D.erase(D.begin());
+
+    // Вывод результата
+    cout << "Дек после преобразования: ";
+    for (const auto& elem : D) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+// Задача 9: Множества
+void task9() {
+    vector<int> V0;
+    vector<vector<int>> V;
+    int n, m, value;
+
+    cout << "Введите количество элементов вектора V0: ";
+    while (!(cin >> n) || n < 1) {
+        cout << "Ошибка ввода! Введите положительное число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора V0: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V0.push_back(value);
+    }
+
+    cout << "Введите количество векторов (больше 0): ";
+    while (!(cin >> m) || m < 1) {
+        cout << "Ошибка ввода! Введите положительное число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    for (int i = 0; i < m; ++i) {
+        vector<int> Vi;
+        cout << "Введите количество элементов вектора " << i + 1 << ": ";
+        int k;
+        while (!(cin >> k) || k < n) {
+            cout << "Ошибка ввода! Количество элементов должно быть не меньше " << n << ": ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        cout << "Введите элементы вектора " << i + 1 << ": ";
+        for (int j = 0; j < k; ++j) {
+            while (!(cin >> value)) {
+                cout << "Ошибка ввода! Введите целое число: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+            Vi.push_back(value);
+        }
+        V.push_back(Vi);
+    }
+
+    multiset<int> setV0(V0.begin(), V0.end());
+    int count = 0;
+
+    for (const auto& Vi : V) {
+        multiset<int> setVi(Vi.begin(), Vi.end());
+        if (includes(setVi.begin(), setVi.end(), setV0.begin(), setV0.end())) {
+            ++count;
+        }
+    }
+
+    cout << "Количество векторов, содержащих все элементы V0: " << count << endl;
+}
+
+// Задача 10: Отображения
+void task10() {
+    vector<int> V;
+    multimap<int, int> M;
+    int n, value;
+
+    cout << "Введите количество элементов вектора: ";
+    while (!(cin >> n) || n < 1) {
+        cout << "Ошибка ввода! Введите положительное число: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    cout << "Введите элементы вектора: ";
+    for (int i = 0; i < n; ++i) {
+        while (!(cin >> value)) {
+            cout << "Ошибка ввода! Введите целое число: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        V.push_back(value);
+    }
+
+    // Группировка по последней цифре
+    for (int elem : V) {
+        int key = abs(elem) % 10; // Последняя цифра
+        M.insert({key, elem});
+    }
+
+    // Вывод результата
+    cout << "Группировка в мультимапе: " << endl;
+    for (const auto& [key, elem] : M) {
+        cout << key << ": " << elem << endl;
+    }
+}
+
+// Основное меню
+void menu() {
+    int choice;
+    do {
+        cout << "Выберите номер задания (1-10) или 0 для выхода: ";
+        while (!(cin >> choice) || choice < 0 || choice > 10) {
+            cout << "Ошибка ввода! Введите число от 0 до 10: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+
+        switch (choice) {
+            case 1:
+                task1();
+                break;
+            case 2:
+                task2();
+                break;
+            case 3:
+                task3();
+                break;
+            case 4:
+                task4();
+                break;
+            case 5:
+                task5();
+                break;
+            case 6:
+                task6();
+                break;
+            case 7:
+                task7();
+                break;
+            case 8:
+                task8();
+                break;
+            case 9:
+                task9();
+                break;
+            case 10:
+                task10();
+                break;
+            case 0:
+                cout << "Выход из программы." << endl;
+                break;
+            default:
+                cout << "Задание отсутствует." << endl;
+                break;
+        }
+    } while (choice != 0);
+}
+
+int main() {
+    menu();
+    return 0;
+}
